@@ -35,7 +35,47 @@ class Heap {
     this.data[j] = temp;
   }
 
-  removeRoot() {
+  /**
+   * Popping off
+   */
+  pop() {
+    const nextIdx = this.nextIndex();
+    if (nextIdx === 0) {
+      throw new Error('Heap is empty');
+    }
+
+    const ret = this.data[0];
+    this.data[0] = this.data[nextIdx - 1];
+    this.data[nextIdx - 1] = undefined;
+
+    let idx = 0;
+    for (;;) {
+      const leftIndex = (idx + 1) * 2 - 1;
+      const rightIndex = (idx + 1) * 2;
+      const max = Math.max(this.data[leftIndex], this.data[rightIndex]);
+
+      if (this.data[idx] < max) {
+        if (this.data[leftIndex] > this.data[rightIndex]) {
+          this.swap(idx, leftIndex);
+          idx = leftIndex;
+        } else {
+          this.swap(idx, rightIndex);
+          idx = rightIndex;
+        }
+      } else {
+        break;
+      }
+    }
+
+    return ret;
+  }
+
+  nextIndex() {
+    for (let i = 0;; i++) {
+      if (typeof this.data[i] === 'undefined') {
+        return i;
+      }
+    }
   }
 
   print() {
